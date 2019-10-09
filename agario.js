@@ -128,7 +128,7 @@ function Player(x,y,radius,color=null){
     })
 
     this.update = function(){
-        let distance_x = (this.mouseX - this.x) * .125
+        let distance_x = (this.mouseX - this.x) * .124
         let distance_y = (this.mouseY - this.y) * .125
 
         let distance = Math.sqrt(distance_x*distance_x + distance_y*distance_y)
