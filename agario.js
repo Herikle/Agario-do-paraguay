@@ -220,7 +220,7 @@ function run(){
 
 
 if (window.matchMedia("(hover: hover)").matches) {
-    generateEnemies(25)
+    generateEnemies(100)
 } else {
     generateEnemies(25)
 }
