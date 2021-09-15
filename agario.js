@@ -1,5 +1,5 @@
-const canvas_height = innerHeight
-const canvas_width = innerWidth
+const canvas_height = window.innerHeight
+const canvas_width = window.innerWidth
 const canvas_element = document.querySelector('canvas')
 canvas_element.height = canvas_height
 canvas_element.width = canvas_width
@@ -14,7 +14,9 @@ function generateRandomColor(){
 
 const canvas = canvas_element.getContext('2d')
 
-function Enemy(x,y,radius,index,speed){
+let total_killed = 0
+
+function Enemy(x,y,radius,index,speed,kill_enemy){
     this.x = x
     this.y = y
     this.radius = radius
@@ -88,9 +90,12 @@ function Enemy(x,y,radius,index,speed){
     }
 
     this.kill = function(){
-        delete enemies[this.index]
+        delete enemies[index]
+        total_killed+=1        
     }
 }
+
+
 
 function Player(x,y,radius,color=null){
     const that = this
@@ -122,9 +127,25 @@ function Player(x,y,radius,color=null){
         this.radius = Math.sqrt(division)
     }
 
-    canvas_element.addEventListener('mousemove',function(e){
-        that.mouseX = e.pageX
-        that.mouseY = e.pageY
+    let eventHandlerName 
+
+
+    if (window.matchMedia("(hover: hover)").matches) {
+        eventHandlerName = 'mousemove'
+    } else {
+        eventHandlerName = 'touchmove'
+    }
+
+    canvas_element.addEventListener(eventHandlerName,function(e){  
+        if(eventHandlerName==='mousemove'){
+            that.mouseX = e.pageX
+            that.mouseY = e.pageY
+        }else{
+            var touch = e.touches[0] || e.changedTouches[0]
+            that.mouseX = touch.pageX
+            that.mouseY = touch.pageY
+        }
+        
     })
 
     this.update = function(){
@@ -155,6 +176,10 @@ let player = new Player(100,100,10,'black')
 
 let enemies = []
 
+function killEnemy(index){
+    delete enemies[index]    
+}
+
 function generateEnemies(count){
     for(let i = 0; i< count;i++){
         let x = (Math.random() * canvas_width ) +200
@@ -170,15 +195,33 @@ function generateEnemies(count){
     }
 }
 
+function gameOver(message){
+    setTimeout(() => {
+        if(!alert(decodeURIComponent(message))){window.location.reload();}
+    }, 500); 
+}
+
 function run(){
-    canvas.clearRect(0,0,canvas_width,canvas_height)
+    canvas.clearRect(0,0,canvas_width,canvas_height)    
     enemies.map(enemy=>{
         enemy.update(player)
     })
     player.update()
-    document.querySelector('p#area > span').textContent = parseInt(player.area)
-    requestAnimationFrame(run)
+    document.querySelector('p#area > span').textContent = parseInt(player.area)    
+    if(player.area > 0 && enemies.length !== total_killed){
+        requestAnimationFrame(run)
+    }else if(player.area===0){
+        gameOver('Você perdeu! Clique OK para tentar novamente.')
+    }else if(enemies.length === total_killed){
+        gameOver('Parabéns. Você venceu, toma aqui um bolo! Clique OK para jogar novamente.')
+    }
 }
 
-generateEnemies(100)
+
+if (window.matchMedia("(hover: hover)").matches) {
+    generateEnemies(100)
+} else {
+    generateEnemies(25)
+}
+
 run()

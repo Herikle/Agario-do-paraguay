@@ -1,12 +1,23 @@
 <canvas></canvas>
+<meta charset='utf-8'>
+<meta name="viewport" content="width=device-width">
+<title>Agario do paraguay</title>
 <div id="score">
-    <p id="area"><strong>Massa:</strong><span></span></p>
+    <p id="area"><strong>Massa: </strong><span></span></p>
+</div>
+<div id='enemies_count'>
+    <p id="count"><strong>Inimigos: </strong><span>0/100</span></p>
 </div>
 <style>
     #score{
         position:absolute;
-        top:1em;
-        left:1em;
+        top:1rem;
+        left:1rem;
+    }
+    #enemies_count{
+        position:absolute;
+        top:1rem;
+        right:1rem;
     }
     body{
         margin:0;
