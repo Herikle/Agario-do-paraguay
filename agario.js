@@ -207,7 +207,8 @@ function run(){
         enemy.update(player)
     })
     player.update()
-    document.querySelector('p#area > span').textContent = parseInt(player.area)    
+    document.querySelector('p#area > span').textContent = parseInt(player.area)
+    document.querySelector('p#count > span').textContent = `${total_killed}/${enemies.length}` 
     if(player.area > 0 && enemies.length !== total_killed){
         requestAnimationFrame(run)
     }else if(player.area===0){
